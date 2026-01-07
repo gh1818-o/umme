@@ -1,0 +1,934 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>umme ♥ hyeon gyu</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Poppins:wght@400;600;700&family=Gowun+Dodum&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg1:#fbf7f2;
+      --bg2:#f6f0f4;
+      --glow-rose: rgba(255,214,225,.35);
+      --glow-champ: rgba(255,236,214,.35);
+
+      --card: rgba(255,255,255,.62);
+      --stroke: rgba(255,255,255,.58);
+      --shadow: rgba(15, 23, 42, 0.12);
+
+      --ink:#1f2937;
+      --muted:#6b7280;
+      --accent:#e7b6c7;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+
+    body{
+      margin:0;
+      color:var(--ink);
+      font-family:"Poppins","Pretendard",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(900px 600px at 20% 10%, var(--glow-rose), transparent 55%),
+        radial-gradient(900px 600px at 85% 25%, var(--glow-champ), transparent 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      display:flex;
+      justify-content:center;
+      padding:22px 14px 44px;
+    }
+
+    .app{
+      width:min(560px, 100%);
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
+
+    .between-title{
+      margin: 10px 0 12px;
+      text-align:center;
+      font-family: "Parisienne", cursive;
+      font-size: 34px;
+      line-height: 1.05;
+      letter-spacing: .2px;
+      color:#2b2b2b;
+    }
+
+    /* ===== hero ===== */
+    .hero-card{
+      width:100%;
+      border-radius:28px;
+      overflow:hidden;
+      background:var(--card);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border:1px solid var(--stroke);
+      box-shadow: 0 18px 55px var(--shadow);
+    }
+
+    .hero-gallery-wrap{
+      padding: 18px;
+      background: rgba(255,255,255,0.38);
+    }
+
+    .hero-gallery{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .hero-frame{
+      width:100%;
+      aspect-ratio: 3 / 4;
+      border-radius: 20px;
+      overflow:hidden;
+      background: rgba(255,255,255,0.55);
+      border: 1px solid rgba(255,255,255,0.65);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 10px;
+    }
+
+    .hero-img{
+      width:100%;
+      height:100%;
+      object-fit: contain;
+      object-position: center;
+      border-radius: 14px;
+      display:block;
+    }
+
+    /* ===== timeline ===== */
+    .timeline-card{
+      border-radius:22px;
+      background:var(--card);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border:1px solid var(--stroke);
+      box-shadow: 0 14px 44px var(--shadow);
+      padding:14px;
+    }
+
+    .timeline-head{
+      display:flex;
+      align-items:baseline;
+      justify-content:space-between;
+      padding: 4px 6px 10px;
+    }
+
+    .timeline-head h2{
+      margin:0;
+      font-size:16px;
+      font-weight:700;
+      letter-spacing:.2px;
+    }
+
+    .timeline-head span{
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .timeline{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      padding: 2px;
+    }
+
+    .tl-item{
+      width:100%;
+      border:none;
+      border-radius:16px;
+      padding: 12px 12px;
+      text-align:left;
+      background: rgba(255,255,255,0.52);
+      border: 1px solid rgba(255,255,255,0.65);
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+      cursor:pointer;
+      transition: transform .12s ease, box-shadow .12s ease;
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+
+    .tl-item:active{ transform: scale(.99); }
+
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 6px rgba(231, 182, 199, 0.22);
+      flex:0 0 auto;
+      margin-left:4px;
+    }
+
+    .tl-title{
+      font-size:14px;
+      font-weight:600;
+      color:#111827;
+      flex:1 1 auto;
+      min-width:0;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    /* ===== modal ===== */
+    .modal{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      background: rgba(0,0,0,0.55);
+      z-index:9999;
+    }
+    .modal.open{ display:flex; }
+
+    .modal-box{
+      width:min(540px, 100%);
+      border-radius:22px;
+      overflow:hidden;
+      background: rgba(255,255,255,0.92);
+      border:1px solid rgba(255,255,255,0.8);
+      box-shadow: 0 22px 70px rgba(0,0,0,0.22);
+    }
+
+    .modal-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:12px 14px;
+      gap:10px;
+      border-bottom: 1px solid rgba(17,24,39,0.06);
+    }
+
+    .modal-title{
+      font-size:14px;
+      font-weight:700;
+      margin:0;
+      color:#111827;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .close-btn{
+      border:none;
+      background: rgba(17,24,39,0.06);
+      color:#111827;
+      border-radius:12px;
+      padding:8px 10px;
+      cursor:pointer;
+      font-weight:700;
+    }
+
+    .modal-body{
+      padding:14px;
+      background: rgba(255,255,255,0.75);
+    }
+
+    .modal-img-wrap{
+      border-radius:18px;
+      overflow:hidden;
+      background: rgba(255,255,255,0.6);
+      border: 1px solid rgba(17,24,39,0.06);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      height: min(82vh, 720px);
+      padding: 12px;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .modal-caption{
+      width:100%;
+      min-height: 34px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 6px 10px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.65);
+      border: 1px solid rgba(17,24,39,0.06);
+      font-family: "Gowun Dodum","Pretendard",sans-serif;
+      font-size: 16px;
+      color:#111827;
+      letter-spacing: -.2px;
+      text-align:center;
+      line-height:1.2;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .modal-img-wrap.push-down{ padding-top: 26px; }
+
+    .modal-img{
+      width:100%;
+      height:100%;
+      object-fit: contain;
+      object-position:center;
+      border-radius:14px;
+      display:block;
+      flex: 1 1 auto;
+    }
+
+    @media (max-width: 520px){
+      .hero-gallery{ grid-template-columns: repeat(2, 1fr); }
+      .hero-frame{ aspect-ratio: 4 / 5; }
+    }
+    @media (max-width: 420px){
+      .modal-img-wrap{ height: min(78vh, 560px); }
+      .modal-caption{ font-size: 15px; }
+    }
+
+    /* ===== next button ===== */
+    .next-page-wrap{
+      position: fixed;
+      left: 50%;
+      bottom: 12px;
+      transform: translateX(-50%);
+      z-index: 9000;
+      pointer-events: auto;
+    }
+    .next-page-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding: 5px 9px;
+      border-radius: 11px;
+      text-decoration:none;
+      font-weight: 700;
+      font-size: 12px;
+      color: #111827;
+      background: rgba(255,255,255,0.62);
+      border: 1px solid rgba(255,255,255,0.75);
+      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.12);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      line-height: 1;
+      user-select:none;
+    }
+    .next-page-btn:active{ transform: scale(.98); }
+    body.modal-open .next-page-wrap{ display:none; }
+    body.game-open .next-page-wrap{ display:none; }
+
+    /* ===== game screen ===== */
+    .game-screen{ display:none; }
+    body.game-open .main-screen{ display:none; }
+    body.game-open .game-screen{ display:block; }
+
+    .game-card{
+      border-radius:22px;
+      background:var(--card);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border:1px solid var(--stroke);
+      box-shadow: 0 14px 44px var(--shadow);
+      padding:14px;
+    }
+
+    .game-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:10px;
+    }
+
+    .game-title{
+      font-family:"Parisienne", cursive;
+      font-size:34px;
+      line-height:1.05;
+      color:#2b2b2b;
+      margin:0;
+    }
+
+    .game-sub{
+      margin-top:6px;
+      font-size:12px;
+      color:var(--muted);
+      font-family:"Gowun Dodum","Pretendard",sans-serif;
+      line-height:1.4;
+    }
+
+    .game-btns{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .gbtn{
+      border:1px solid rgba(255,255,255,0.75);
+      background: rgba(255,255,255,0.62);
+      color:#111827;
+      border-radius:12px;
+      padding: 6px 9px;
+      font-weight:700;
+      font-size:12px;
+      cursor:pointer;
+      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.12);
+      line-height:1;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      user-select:none;
+    }
+    .gbtn:active{ transform: scale(.98); }
+
+    #heartCanvas{
+      width:100%;
+      aspect-ratio: 16 / 11;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,0.75);
+      box-shadow: 0 14px 40px rgba(15, 23, 42, 0.10);
+      background:
+        radial-gradient(ellipse at top, rgba(255, 0, 100, .06), transparent 55%),
+        radial-gradient(ellipse at bottom, rgba(0, 150, 255, .06), transparent 55%),
+        rgba(255,255,255,0.35);
+      touch-action:none;
+      display:block;
+    }
+
+    .game-hint{
+      margin-top:10px;
+      font-size:12px;
+      color:var(--muted);
+      font-family:"Gowun Dodum","Pretendard",sans-serif;
+      line-height:1.55;
+    }
+
+    /* ===== celebration overlay ===== */
+    .celebrate{
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 9500;
+      pointer-events: none;
+    }
+    .celebrate.show{ display:flex; }
+
+    #fx{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      display:block;
+      pointer-events:none;
+    }
+
+    .celebrate-card{
+      position: relative;
+      width: min(520px, 92vw);
+      border-radius: 24px;
+      background: rgba(255,255,255,0.80);
+      border: 1px solid rgba(255,255,255,0.75);
+      box-shadow: 0 26px 90px rgba(0,0,0,0.22);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 18px 16px 16px;
+      text-align:center;
+      pointer-events: auto;
+    }
+
+    .celebrate-title{
+      margin:0;
+      font-family:"Parisienne", cursive;
+      font-size: 44px;
+      line-height: 1;
+      color:#2b2b2b;
+    }
+    .celebrate-sub{
+      margin-top:10px;
+      font-family:"Gowun Dodum","Pretendard",sans-serif;
+      font-size:16px;
+      color:#111827;
+      opacity:.9;
+      line-height:1.35;
+    }
+    .celebrate-actions{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      margin-top:14px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- main -->
+  <main class="app main-screen">
+    <section class="hero-card">
+      <div class="hero-gallery-wrap">
+        <div class="hero-gallery">
+          <div class="hero-frame"><img class="hero-img" src="assets/000.jpg" alt="000" /></div>
+          <div class="hero-frame"><img class="hero-img" src="assets/00.jpg" alt="00" /></div>
+          <div class="hero-frame"><img class="hero-img" src="assets/0000.jpg" alt="0000" /></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="between-title">umme ♥ hyeon gyu</div>
+
+    <section class="timeline-card">
+      <div class="timeline-head">
+        <h2>Timeline</h2>
+        <span>tap</span>
+      </div>
+      <div class="timeline" id="timeline"></div>
+    </section>
+  </main>
+
+  <!-- game -->
+  <main class="app game-screen">
+    <section class="game-card">
+      <div class="game-head">
+        <div>
+          <h1 class="game-title">draw a heart</h1>
+          <div class="game-sub">guide : shape , clear : erase, finish : press after drawing </div>
+        </div>
+        <div class="game-btns">
+          <button class="gbtn" id="guideBtn" type="button">guide</button>
+          <button class="gbtn" id="clearBtn" type="button">clear</button>
+          <button class="gbtn" id="finishBtn" type="button">finish</button>
+          <button class="gbtn" id="backBtn" type="button">(back)</button>
+        </div>
+      </div>
+
+      <canvas id="heartCanvas"></canvas>
+      <div class="game-hint"></div>
+    </section>
+  </main>
+
+  <!-- next -->
+  <div class="next-page-wrap">
+    <a class="next-page-btn" href="#" id="nextBtn">(next ▶)</a>
+  </div>
+
+  <!-- celebrate -->
+  <div class="celebrate" id="celebrate">
+    <canvas id="fx"></canvas>
+    <div class="celebrate-card">
+      <p class="celebrate-title">100</p>
+      <div class="celebrate-sub">100일 축하해 💗</div>
+      <div class="celebrate-actions">
+        <button class="gbtn" id="againBtn" type="button">again</button>
+        <button class="gbtn" id="closeCeleBtn" type="button">close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- modal -->
+  <div class="modal" id="modal">
+    <div class="modal-box" role="dialog" aria-modal="true">
+      <div class="modal-top">
+        <p class="modal-title" id="modalTitle"></p>
+        <button class="close-btn" id="closeBtn" type="button">닫기</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-img-wrap" id="modalWrap">
+          <div class="modal-caption" id="modalCaption"></div>
+          <img class="modal-img" id="modalImg" alt="photo" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===== timeline / modal =====
+    const items = [
+      { title: "우리가 처음 만난 날", img: "assets/01.jpg", caption: "2025.10.01 「umme think... he is scammer」", needsTopSpace: true },
+      { title: "우리가 영상통화 한 날", img: "assets/02.jpg", caption: "what are you doing umme... illegal.. police ☎", needsTopSpace: false },
+      { title: "짱이뻐", img: "assets/03.jpg", caption: "celebrity♥", needsTopSpace: true },
+      { title: "힙합유미", img: "assets/04.jpg", caption: "eminem ㅎㄷㄷ", needsTopSpace: true },
+      { title: "브이유미", img: "assets/05.jpg", caption: "What are you wearing on your head? ㅋㅋㅋㅋ", needsTopSpace: false },
+      { title: "omg...", img: "assets/06.jpg", caption: "if 『cute』 is alive", needsTopSpace: false },
+      { title: "letter to umme", img: "assets/07.jpg", caption: "Love u♥", needsTopSpace: false }
+    ];
+
+    const timeline = document.getElementById("timeline");
+    const modal = document.getElementById("modal");
+    const modalImg = document.getElementById("modalImg");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalCaption = document.getElementById("modalCaption");
+    const modalWrap = document.getElementById("modalWrap");
+    const closeBtn = document.getElementById("closeBtn");
+
+    function openModal(it){
+      modalTitle.textContent = it.title || "";
+      modalImg.src = it.img;
+      modalCaption.textContent = it.caption || "";
+      modalWrap.classList.toggle("push-down", !!it.needsTopSpace);
+
+      modal.classList.add("open");
+      document.body.classList.add("modal-open");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModal(){
+      modal.classList.remove("open");
+      document.body.classList.remove("modal-open");
+      document.body.style.overflow = "";
+      modalImg.src = "";
+      modalCaption.textContent = "";
+      modalWrap.classList.remove("push-down");
+    }
+
+    items.forEach((it) => {
+      const btn = document.createElement("button");
+      btn.className = "tl-item";
+      btn.type = "button";
+      btn.innerHTML = `<span class="dot"></span><span class="tl-title">${it.title}</span>`;
+      btn.addEventListener("click", () => openModal(it));
+      timeline.appendChild(btn);
+    });
+
+    closeBtn.addEventListener("click", closeModal);
+    modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
+    window.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
+
+    // ===== navigation to game =====
+    const nextBtn = document.getElementById("nextBtn");
+    const backBtn = document.getElementById("backBtn");
+
+    nextBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      document.body.classList.add("game-open");
+      requestAnimationFrame(() => {
+        resizeCanvas();
+        fxResize();
+        // 일부 미리보기는 첫 프레임에 rect가 0인 경우가 있어서 한 번 더
+        setTimeout(() => { resizeCanvas(); fxResize(); }, 60);
+      });
+    });
+
+    backBtn.addEventListener("click", () => {
+      document.body.classList.remove("game-open");
+      stopCelebration();
+    });
+
+    // ===== game drawing =====
+    const canvas = document.getElementById("heartCanvas");
+    const ctx = canvas.getContext("2d");
+
+    let strokes = [];
+    let current = null;
+    let showGuide = true;
+    let isDown = false;
+
+    let totalDrawLen = 0;
+    let celebrated = false;
+
+    function resizeCanvas(){
+      const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = Math.max(1, Math.floor(rect.width * dpr));
+      canvas.height = Math.max(1, Math.floor(rect.height * dpr));
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      redraw();
+    }
+
+    window.addEventListener("resize", () => {
+      if(document.body.classList.contains("game-open")){
+        resizeCanvas();
+        fxResize();
+      }
+    });
+
+    function getPos(e){
+      const rect = canvas.getBoundingClientRect();
+      if(e.touches && e.touches[0]){
+        return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
+      }
+      return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    }
+
+    function startStroke(x, y){
+      current = [{x, y}];
+      strokes.push(current);
+    }
+
+    function addPoint(x, y){
+      if(!current) return;
+      const last = current[current.length - 1];
+      const dx = x - last.x, dy = y - last.y;
+      const d2 = dx*dx + dy*dy;
+      if(d2 < 1.5) return;
+      const d = Math.sqrt(d2);
+      totalDrawLen += d;
+      current.push({x, y});
+      
+    }
+
+    function endStroke(){
+      current = null;
+      
+    }
+
+    function clearAll(){
+      strokes = [];
+      current = null;
+      totalDrawLen = 0;
+      celebrated = false;
+      stopCelebration();
+      redraw();
+    }
+
+    function drawGuide(){
+      const w = canvas.getBoundingClientRect().width;
+      const h = canvas.getBoundingClientRect().height;
+      const cx = w * 0.5;
+      const cy = h * 0.46;
+      const scale = Math.min(w, h) * 0.018;
+
+      ctx.save();
+      ctx.lineWidth = 2;
+      ctx.setLineDash([6, 8]);
+      ctx.globalAlpha = 0.55;
+
+      ctx.beginPath();
+      for (let i = 0; i <= 520; i++) {
+        const t = (Math.PI * 2) * (i / 520);
+        const x = 16 * Math.pow(Math.sin(t), 3);
+        const y = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
+        const px = cx + x * scale;
+        const py = cy - y * scale;
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function redraw(){
+      const w = canvas.getBoundingClientRect().width;
+      const h = canvas.getBoundingClientRect().height;
+
+      ctx.clearRect(0, 0, w, h);
+      if(showGuide) drawGuide();
+
+      ctx.save();
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.lineWidth = 4;
+
+      for(const s of strokes){
+        if(s.length < 2) continue;
+        ctx.beginPath();
+        ctx.moveTo(s[0].x, s[0].y);
+        for(let i=1;i<s.length;i++) ctx.lineTo(s[i].x, s[i].y);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    function checkComplete(){
+      if(celebrated) return;
+      const w = canvas.getBoundingClientRect().width;
+      const h = canvas.getBoundingClientRect().height;
+
+      // ✅ 기준 훨씬 낮춤: 조금만 그리면 뜸
+      const threshold = Math.max(220, (w + h) * 0.55);
+
+      if(totalDrawLen >= threshold){
+        celebrated = true;
+        startCelebration();
+      }
+    }
+
+    const down = (e) => {
+      e.preventDefault();
+      isDown = true;
+      const p = getPos(e);
+      startStroke(p.x, p.y);
+      redraw();
+    };
+
+    const move = (e) => {
+      if(!isDown) return;
+      e.preventDefault();
+      const p = getPos(e);
+      addPoint(p.x, p.y);
+      redraw();
+    };
+
+    const up = (e) => {
+      if(!isDown) return;
+      e.preventDefault();
+      isDown = false;
+      endStroke();
+      redraw();
+    };
+
+    canvas.addEventListener("mousedown", down);
+    window.addEventListener("mousemove", move);
+    window.addEventListener("mouseup", up);
+
+    canvas.addEventListener("touchstart", down, {passive:false});
+    window.addEventListener("touchmove", move, {passive:false});
+    window.addEventListener("touchend", up, {passive:false});
+
+    document.getElementById("clearBtn").addEventListener("click", clearAll);
+    document.getElementById("guideBtn").addEventListener("click", () => {
+      showGuide = !showGuide;
+      redraw();
+    });
+
+    // ✅ finish 버튼: 무조건 축하
+    document.getElementById("finishBtn").addEventListener("click", () => {
+      if(!celebrated){
+        celebrated = true;
+        startCelebration();
+      }
+    });
+
+    // ===== celebration / particles =====
+    const celebrate = document.getElementById("celebrate");
+    const fx = document.getElementById("fx");
+    const fxCtx = fx.getContext("2d");
+
+    const againBtn = document.getElementById("againBtn");
+    const closeCeleBtn = document.getElementById("closeCeleBtn");
+
+    let fxRunning = false;
+    let fxRAF = null;
+    let hearts = [];
+    let lastT = 0;
+
+    function fxResize(){
+      const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+      fx.width = Math.floor(window.innerWidth * dpr);
+      fx.height = Math.floor(window.innerHeight * dpr);
+      fxCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function rand(a,b){ return a + Math.random() * (b-a); }
+
+    function spawnHeartBurst(count){
+      const cx = window.innerWidth * 0.5;
+      const cy = window.innerHeight * 0.58;
+      for(let i=0;i<count;i++){
+        hearts.push({
+          x: cx + rand(-40, 40),
+          y: cy + rand(-20, 20),
+          vx: rand(-70, 70),
+          vy: rand(-260, -140),
+          g: rand(280, 380),
+          r: rand(10, 18),
+          rot: rand(-1.6, 1.6),
+          vr: rand(-2.3, 2.3),
+          life: rand(1.7, 2.7),
+          age: 0,
+          alpha: 1
+        });
+      }
+    }
+
+    function drawHeartShape(ctx, x, y, s, rot, a){
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(rot);
+      ctx.globalAlpha = a;
+
+      ctx.beginPath();
+      const k = s;
+      ctx.moveTo(0, -0.2*k);
+      ctx.bezierCurveTo(0.9*k, -1.2*k, 2.2*k, -0.1*k, 0, 1.6*k);
+      ctx.bezierCurveTo(-2.2*k, -0.1*k, -0.9*k, -1.2*k, 0, -0.2*k);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    function fxLoop(t){
+      if(!fxRunning) return;
+      const dt = Math.min(0.033, (t - lastT) / 1000 || 0.016);
+      lastT = t;
+
+      fxCtx.clearRect(0,0,window.innerWidth, window.innerHeight);
+
+      fxCtx.save();
+      fxCtx.fillStyle = "rgba(231, 182, 199, 0.95)";
+      fxCtx.shadowColor = "rgba(231, 182, 199, 0.55)";
+      fxCtx.shadowBlur = 18;
+
+      hearts = hearts.filter(p => {
+        p.age += dt;
+        if(p.age >= p.life) return false;
+
+        p.vy += p.g * dt;
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        p.rot += p.vr * dt;
+
+        const left = 1 - (p.age / p.life);
+        p.alpha = Math.max(0, Math.min(1, left));
+
+        drawHeartShape(fxCtx, p.x, p.y, p.r, p.rot, p.alpha * 0.95);
+        return true;
+      });
+
+      fxCtx.restore();
+
+      if(Math.random() < 0.14) spawnHeartBurst(2);
+
+      fxRAF = requestAnimationFrame(fxLoop);
+    }
+
+    function startCelebration(){
+      if(!document.body.classList.contains("game-open")) return;
+
+      celebrate.classList.add("show");
+      fxResize();
+
+      hearts = [];
+      spawnHeartBurst(52);
+
+      fxRunning = true;
+      lastT = performance.now();
+      fxRAF = requestAnimationFrame(fxLoop);
+    }
+
+    function stopCelebration(){
+      celebrate.classList.remove("show");
+      fxRunning = false;
+      hearts = [];
+      if(fxRAF) cancelAnimationFrame(fxRAF);
+      fxRAF = null;
+      fxCtx.clearRect(0,0,window.innerWidth, window.innerHeight);
+    }
+
+    againBtn.addEventListener("click", () => {
+      clearAll();
+      showGuide = true;
+      redraw();
+    });
+
+    closeCeleBtn.addEventListener("click", () => stopCelebration());
+
+    celebrate.addEventListener("click", (e) => {
+      if(e.target === celebrate) stopCelebration();
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if(e.key === "Escape"){
+        if(celebrate.classList.contains("show")) stopCelebration();
+      }
+    });
+  </script>
+</body>
+</html>
